@@ -3,6 +3,8 @@
 
 import boto3
 
+default_omi = 'ami-d4f2f835'
+
 with open('.config','r') as config:
   AK, SK = config.read().rstrip().split('\n')
 
@@ -16,5 +18,9 @@ def create_vpc():
   for i in cidr_subnet:
     subnet = vpc.create_subnet(CidrBlock=i)
   gateway = ec2.create_internet_gateway()
+  # TODO :
+  # 1/ Link to vpc in subnet public.
+  # 2/ Add Name tags with name associate.
+  bastion = ec2.create_instances(ImageId=default_omi, InstanceType='t1.micro', MinCount=1, MaxCount=1)
 
 create_vpc()
