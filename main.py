@@ -11,9 +11,10 @@ ec2 = boto3.resource(service_name='ec2', region_name='eu-west-2', endpoint_url='
 
 def create_vpc():
   cidr_vpc = '192.168.0.0/24'
-  cidr_subnet = ['192.168.0.0/25']
+  cidr_subnet = ['192.168.0.0/25','192.168.0.128/25']
   vpc = ec2.create_vpc(CidrBlock=cidr_vpc)
-  subnet = vpc.create_subnet(CidrBlock=cidr_subnet[0])
+  for i in cidr_subnet:
+    subnet = vpc.create_subnet(CidrBlock=i)
   gateway = ec2.create_internet_gateway()
 
 create_vpc()
