@@ -3,17 +3,17 @@
 
 import boto3
 
-#default_omi = 'ami-d4f2f835' # Centos 7 eu-west-2
-default_omi = 'ami-6058c4d0'  # Centos 7 us-west-1
+default_omi = 'ami-d4f2f835' # Centos 7 eu-west-2
+#default_omi = 'ami-6058c4d0'  # Centos 7 us-west-1
 key_pair = 'osc'
 
 with open('.config','r') as config:
   AK, SK = config.read().rstrip().split('\n')
 
-EC2endpoint = "https://fcu.us-west-1.outscale.com"
-#EC2endpoint = "https://fcu.eu-west-2.outscale.com"
-#EC2region = "eu-west-2"
-EC2region = "us-west-1"
+#EC2endpoint = "https://fcu.us-west-1.outscale.com"
+EC2endpoint = "https://fcu.eu-west-2.outscale.com"
+EC2region = "eu-west-2"
+#EC2region = "us-west-1"
 
 cli = boto3.client(service_name='ec2', region_name=EC2region, endpoint_url=EC2endpoint, aws_access_key_id=AK, aws_secret_access_key=SK)
 ec2 = boto3.resource(service_name='ec2', region_name=EC2region, endpoint_url=EC2endpoint, aws_access_key_id=AK, aws_secret_access_key=SK)
@@ -45,4 +45,10 @@ def create_vpc():
   bastion_ip = cli.allocate_address(Domain='vpc')
   cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
-create_vpc()
+def create_instance():
+    instance_tags = {'Key':'Name','Value':'foobar'}
+    instance = ec2.create_instances(ImageId=default_omi, InstanceType='t1.micro', KeyName=key_pair, MinCount=1, MaxCount=1)[0]
+    instance.create_tags(Tags=[instance_tags])
+
+#create_vpc()
+create_instance()
