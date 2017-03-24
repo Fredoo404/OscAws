@@ -19,11 +19,6 @@ cli = boto3.client(service_name='ec2', region_name=EC2region, endpoint_url=EC2en
 ec2 = boto3.resource(service_name='ec2', region_name=EC2region, endpoint_url=EC2endpoint, aws_access_key_id=AK, aws_secret_access_key=SK)
 
 def create_vpc():
-  # Create a VPC with :
-  # - 1 public subnet
-  # - 1 private subnet
-  # - 1 one internet gateway.
-  # - 1 instance "bastion" reachable from internet thanks to eip.
   cidr_vpc = '192.168.0.0/24'
   cidr_subnet = ['192.168.0.0/25','192.168.0.128/25']
   vpc_tags = {'Key':'Name','Value':'foobar'}
@@ -45,9 +40,11 @@ def create_vpc():
   bastion_ip = cli.allocate_address(Domain='vpc')
   cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
-def create_instance():
-    instance_tags = {'Key':'Name','Value':'foobar'}
-    instance = ec2.create_instances(ImageId=default_omi, InstanceType='t1.micro', KeyName=key_pair, MinCount=1, MaxCount=1)[0]
+def create_instance(config='/Users/fredericbentouati/test'):
+    with open(config, 'r') as files:
+        userdata = files.read()
+    instance_tags = {'Key':'Name','Value':'build_omi'}
+    instance = ec2.create_instances(ImageId=default_omi, InstanceType='t1.micro', KeyName=key_pair, UserData=userdata, MinCount=1, MaxCount=1)[0]
     instance.create_tags(Tags=[instance_tags])
 
 #create_vpc()
