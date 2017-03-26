@@ -40,12 +40,16 @@ def create_vpc():
   bastion_ip = cli.allocate_address(Domain='vpc')
   cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
-def create_instance(config='/Users/fredericbentouati/test'):
-    with open(config, 'r') as files:
-        userdata = files.read()
-    instance_tags = {'Key':'Name','Value':'build_omi'}
-    instance = ec2.create_instances(ImageId=default_omi, InstanceType='t1.micro', KeyName=key_pair, UserData=userdata, MinCount=1, MaxCount=1)[0]
+def create_instance(config=None, InsType='t1.micro'):
+    if config is not None:
+        with open(config, 'r') as files:
+            userdata = files.read()
+    else:
+        userdata = ''
+    instance_tags = {'Key':'Name','Value':'foobar'}
+    instance = ec2.create_instances(ImageId=default_omi, InstanceType=InsType, KeyName=key_pair, UserData=userdata, MinCount=1, MaxCount=1)[0]
     instance.create_tags(Tags=[instance_tags])
 
 #create_vpc()
+#create_instance(config='/Users/fredericbentouati/test', InsType='m4.large')
 create_instance()
