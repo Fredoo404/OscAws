@@ -18,7 +18,7 @@ package_upgrade: true
 packages:
   - zabbix-agent
 runcmd:
-  - [sed, -i, s/127.0.0.1/171.33.69.184/g, /etc/zabbix/zabbix_agentd.conf]
+  - [sed, -i, s/127.0.0.1/171.33.118.38/g, /etc/zabbix/zabbix_agentd.conf]
   - [sed, -i, /Hostname=Zabbix server/d, /etc/zabbix/zabbix_agentd.conf]
   - [systemctl, enable, zabbix-agent.service]
   - [systemctl, start, zabbix-agent.service]
