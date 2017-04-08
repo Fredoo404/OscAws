@@ -1,24 +1,9 @@
 #cloud-config
 hostname: foobar
 fqdn: foobar
-write_files:
-  - path: /etc/yum.repos.d/zabbix.repo
-    owner: root:root
-    permissions: '0444'
-    content: |
-      # installed by cloud-init
-      [zabbix]
-      name=Zabbix Official Repository - $basearch
-      baseurl=http://repo.zabbix.com/zabbix/2.4/rhel/7/$basearch/
-      enabled=1
-      gpgcheck=1
-      gpgkey=http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX
-      humanname=Zabbix Official Repository - $basearch
 package_upgrade: true
-packages:
-  - zabbix-agent
+salt_minion:
+  conf:
+    master: 171.33.103.135
 runcmd:
-  - [sed, -i, s/127.0.0.1/171.33.118.38/g, /etc/zabbix/zabbix_agentd.conf]
-  - [sed, -i, /Hostname=Zabbix server/d, /etc/zabbix/zabbix_agentd.conf]
-  - [systemctl, enable, zabbix-agent.service]
-  - [systemctl, start, zabbix-agent.service]
+  - [salt-call, state.highstate]
