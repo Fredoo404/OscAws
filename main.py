@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import boto3
+import time
 
 default_omi = 'ami-d4f2f835' # Centos 7 eu-west-2
 #default_omi = 'ami-6058c4d0'  # Centos 7 us-west-1
@@ -40,7 +41,7 @@ def create_vpc():
   bastion_ip = cli.allocate_address(Domain='vpc')
   cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
-def create_instance(config=None, InsType='t1.micro', Omi=default_omi):
+def create_instance(config=None, InsType='t1.micro', Omi=default_omi, ebsSize=None):
     if config is not None:
         with open(config, 'r') as files:
             userdata = files.read()
@@ -49,7 +50,13 @@ def create_instance(config=None, InsType='t1.micro', Omi=default_omi):
     instance_tags = {'Key':'Name','Value':'foobar'}
     instance = ec2.create_instances(ImageId=Omi, InstanceType=InsType, KeyName=key_pair, UserData=userdata, MinCount=1, MaxCount=1)[0]
     instance.create_tags(Tags=[instance_tags])
+    if ebsSize != None:
+        vol = ec2.create_volume(Size=ebsSize, AvailabilityZone=EC2region + "a")
+	while instance.state['Name'] != 'running':
+		instance.reload()
+        instance.attach_volume(VolumeId=vol.id, Device="/dev/xvdb")
 
 #create_vpc()
-create_instance(config='/Users/frederic/Dropbox/dev/OscAws/cloud-init/basic', InsType='m4.large', Omi='ami-878aeda0')
+#create_instance(config='/Users/frederic/Dropbox/dev/OscAws/cloud-init/basic', InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
+create_instance(InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
 #create_instance()
