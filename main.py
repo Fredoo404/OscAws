@@ -20,6 +20,17 @@ cli = boto3.client(service_name='ec2', region_name=EC2region, endpoint_url=EC2en
 ec2 = boto3.resource(service_name='ec2', region_name=EC2region, endpoint_url=EC2endpoint, aws_access_key_id=AK, aws_secret_access_key=SK)
 
 def create_vpc():
+    """
+        Function which will create a vpc with:
+          - 2 subnets (192.168.0.0/25 and 192.168.0.128/25)
+          - create internet gateway and attach it to vpc.
+          - create an instance on public subnet
+          - associate public ip on this instance.
+
+           # Create standard vpc
+            create_vpc()
+
+    """
   cidr_vpc = '192.168.0.0/24'
   cidr_subnet = ['192.168.0.0/25','192.168.0.128/25']
   vpc_tags = {'Key':'Name','Value':'foobar'}
@@ -66,5 +77,3 @@ def create_instance(config=None, InsType='t1.micro', Omi=default_omi, ebsSize=No
 	while instance.state['Name'] != 'running':
 		instance.reload()
         instance.attach_volume(VolumeId=vol.id, Device="/dev/xvdb")
-
-#create_vpc()
