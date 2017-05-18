@@ -42,6 +42,17 @@ def create_vpc():
   cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
 def create_instance(config=None, InsType='t1.micro', Omi=default_omi, ebsSize=None):
+    """
+        Function which will create an instance with parameters configured.
+            # Create default instance 
+            create_instance()
+
+            # Create an m4.large with an ebs of 20G.
+            create_instance(InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
+
+            # Create an instance with cloud-init configuration in user-data.
+            create_instance(config='/Users/frederic/Dropbox/dev/OscAws/cloud-init/basic', InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
+    """
     if config is not None:
         with open(config, 'r') as files:
             userdata = files.read()
@@ -57,6 +68,3 @@ def create_instance(config=None, InsType='t1.micro', Omi=default_omi, ebsSize=No
         instance.attach_volume(VolumeId=vol.id, Device="/dev/xvdb")
 
 #create_vpc()
-#create_instance(config='/Users/frederic/Dropbox/dev/OscAws/cloud-init/basic', InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
-create_instance(InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
-#create_instance()
