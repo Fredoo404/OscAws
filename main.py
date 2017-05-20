@@ -31,26 +31,26 @@ def create_vpc():
             create_vpc()
 
     """
-  cidr_vpc = '192.168.0.0/24'
-  cidr_subnet = ['192.168.0.0/25','192.168.0.128/25']
-  vpc_tags = {'Key':'Name','Value':'foobar'}
-  vpc = ec2.create_vpc(CidrBlock=cidr_vpc)
-  vpc.create_tags(Tags=[vpc_tags])
-  for i in cidr_subnet:
-    subnet = vpc.create_subnet(CidrBlock=i)
-    if i == cidr_subnet[0]:
-        subnet_tags = {'Key':'Name','Value':'public'}
-        subnet.create_tags(Tags=[subnet_tags])
-        bastion = subnet.create_instances(ImageId=default_omi, InstanceType='t1.micro', KeyName=key_pair, MinCount=1, MaxCount=1)
-        bastion_tags = {'Key':'Name','Value':'bastion'}
-        bastion[0].create_tags(Tags=[bastion_tags])
-    else:
-        subnet_tags = {'Key':'Name','Value':'private'}
-        subnet.create_tags(Tags=[subnet_tags])
-  gateway = ec2.create_internet_gateway()
-  gateway.attach_to_vpc(VpcId=vpc.id)
-  bastion_ip = cli.allocate_address(Domain='vpc')
-  cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
+    cidr_vpc = '192.168.0.0/24'
+    cidr_subnet = ['192.168.0.0/25','192.168.0.128/25']
+    vpc_tags = {'Key':'Name','Value':'foobar'}
+    vpc = ec2.create_vpc(CidrBlock=cidr_vpc)
+    vpc.create_tags(Tags=[vpc_tags])
+    for i in cidr_subnet:
+        subnet = vpc.create_subnet(CidrBlock=i)
+        if i == cidr_subnet[0]:
+            subnet_tags = {'Key':'Name','Value':'public'}
+            subnet.create_tags(Tags=[subnet_tags])
+            bastion = subnet.create_instances(ImageId=default_omi, InstanceType='t1.micro', KeyName=key_pair, MinCount=1, MaxCount=1)
+            bastion_tags = {'Key':'Name','Value':'bastion'}
+            bastion[0].create_tags(Tags=[bastion_tags])
+        else:
+            subnet_tags = {'Key':'Name','Value':'private'}
+            subnet.create_tags(Tags=[subnet_tags])
+    gateway = ec2.create_internet_gateway()
+    gateway.attach_to_vpc(VpcId=vpc.id)
+    bastion_ip = cli.allocate_address(Domain='vpc')
+    cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
 def create_instance(config=None, InsType='t1.micro', Omi=default_omi, ebsSize=None):
     """
