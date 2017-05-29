@@ -7,7 +7,7 @@ import time
 AK, SK, AMI, KP, REGION = common.config()
 cli, ec2 = common.boto_connector('ec2')
 
-def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize=None):
+def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize=None, VmName=""):
     """
         Function which will create an instance with parameters configured.
             # Create default instance 
@@ -24,7 +24,7 @@ def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize
             userdata = files.read()
     else:
         userdata = ''
-    instance_tags = {'Key':'Name','Value':'foobar'}
+    instance_tags = {'Key':'Name','Value':VmName}
     instance = ec2.create_instances(ImageId=Omi, InstanceType=InsType, KeyName=KeyPair, UserData=userdata, MinCount=1, MaxCount=1)[0]
     instance.create_tags(Tags=[instance_tags])
     if ebsSize != None:
@@ -34,4 +34,4 @@ def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize
         instance.attach_volume(VolumeId=vol.id, Device="/dev/xvdb")
 
 if __name__ == "__main__":
-    create_instance()
+    create_instance(VmName="foo")
