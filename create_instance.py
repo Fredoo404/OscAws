@@ -11,7 +11,7 @@ def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize
     """
         Function which will create an instance with parameters configured.
             # Create default instance 
-            create_instance()
+            create_instance(VmName="foobar")
 
             # Create an m4.large with an ebs of 20G.
             create_instance(InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
