@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import common
+import argparse
 
 AK, SK, AMI, KP, REGION = common.config()
 cli, ec2 = common.boto_connector('ec2')
@@ -33,4 +34,18 @@ def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize
         instance.attach_volume(VolumeId=vol.id, Device="/dev/xvdb")
 
 if __name__ == "__main__":
-    create_instance(VmName="foo")
+    parser = argparse.ArgumentParser(description='Create Instance script')
+    parser.add_argument('-n', dest='vmname', help='VM name (Default: foobar)', default='foobar')
+    parser.add_argument('-t', dest='instancetype', help='Instance type (Default: m4.large)', default='m4.large')
+    parser.add_argument('-o', dest='ami', help='AMI/OMI (Default: Define in .config file)', default=AMI)
+    parser.add_argument('-k', dest='keypair', help='Key Pair (Default: Define in .config file)', default=KP)
+    parser.add_argument('-e', dest='ebs', help='Ebs size', default=None)
+    parser.add_argument('-u', dest='userdata', help='Cloud-init config', default=None)
+
+    argVmname = parser.parse_args().vmname
+    argInstancetype = parser.parse_args().instancetype
+    argAmi = parser.parse_args().ami
+    argKeypair = parser.parse_args().keypair
+    argEbs = parser.parse_args().ebs
+    argUserdata = parser.parse_args().userdata
+    create_instance(VmName=argVmname, config=argUserdata, InsType=argInstancetype, Omi=argAmi, KeyPair=argKeypair, ebsSize=argEbs)
