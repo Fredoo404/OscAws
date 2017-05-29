@@ -31,4 +31,3 @@ Bastion machine will be usefull for connect to other machine to your vpc.
 
  * Create argument for create custom vpc.
  * Improve common.py thank to dict.
- * Move create_instance function to dedicate file.
