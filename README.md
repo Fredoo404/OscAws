@@ -1,6 +1,6 @@
 # Goal of this project
 
-The goal of this script is to create many things quickly.
+The goal of this set of script is to create many things quickly.
 
 This script work on Outscale and AWS cloud.
 
