@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import common
-import time
 
 AK, SK, AMI, KP, REGION = common.config()
 cli, ec2 = common.boto_connector('ec2')
