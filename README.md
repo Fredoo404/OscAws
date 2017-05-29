@@ -20,6 +20,27 @@ Then launch this script of your choice like below :
  ```python
  python create_vpc.py
  ```
+## Create an instance (create_instance.py)
+
+This script without parameter allow you create a basic instance.
+
+You can put parameter below if your want a custom instance :
+
+ ```bash
+usage: create_instance.py [-h] [-n VMNAME] [-t INSTANCETYPE] [-o AMI]
+                          [-k KEYPAIR] [-e EBS] [-u USERDATA]
+
+Create Instance script
+
+optional arguments:
+  -h, --help       show this help message and exit
+  -n VMNAME        VM name (Default: foobar)
+  -t INSTANCETYPE  Instance type (Default: m4.large)
+  -o AMI           AMI/OMI (Default: Define in .config file)
+  -k KEYPAIR       Key Pair (Default: Define in .config file)
+  -e EBS           Ebs size
+  -u USERDATA      Cloud-init config
+ ```
 
 ## Create a VPC
 
