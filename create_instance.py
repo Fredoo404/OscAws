@@ -7,25 +7,17 @@ import argparse
 AK, SK, AMI, KP, REGION = common.config()
 cli, ec2 = common.boto_connector('ec2')
 
-def create_instance(config=None, InsType='t1.micro', Omi=AMI, KeyPair=KP,ebsSize=None, VmName=""):
+def create_instance(config=None, insType='t1.micro', omi=AMI, keyPair=KP,ebsSize=None, vmName=""):
     """
         Function which will create an instance with parameters configured.
-            # Create default instance 
-            create_instance(VmName="foobar")
-
-            # Create an m4.large with an ebs of 20G.
-            create_instance(InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
-
-            # Create an instance with cloud-init configuration in user-data.
-            create_instance(config='/Users/frederic/Dropbox/dev/OscAws/cloud-init/basic', InsType='m4.large', Omi='ami-878aeda0', ebsSize=20)
     """
     if config is not None:
         with open(config, 'r') as files:
             userdata = files.read()
     else:
         userdata = ''
-    instance_tags = {'Key':'Name','Value':VmName}
-    instance = ec2.create_instances(ImageId=Omi, InstanceType=InsType, KeyName=KeyPair, UserData=userdata, MinCount=1, MaxCount=1)[0]
+    instance_tags = {'Key':'Name','Value':vmName}
+    instance = ec2.create_instances(ImageId=omi, InstanceType=insType, KeyName=keyPair, UserData=userdata, MinCount=1, MaxCount=1)[0]
     instance.create_tags(Tags=[instance_tags])
     if ebsSize != None:
         vol = ec2.create_volume(Size=ebsSize, AvailabilityZone=EC2region + "a")
@@ -48,4 +40,4 @@ if __name__ == "__main__":
     argKeypair = parser.parse_args().keypair
     argEbs = parser.parse_args().ebs
     argUserdata = parser.parse_args().userdata
-    create_instance(VmName=argVmname, config=argUserdata, InsType=argInstancetype, Omi=argAmi, KeyPair=argKeypair, ebsSize=argEbs)
+    create_instance(vmName=argVmname, config=argUserdata, insType=argInstancetype, omi=argAmi, keyPair=argKeypair, ebsSize=argEbs)
