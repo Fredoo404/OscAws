@@ -2,11 +2,12 @@
 # encoding: utf-8
 
 import common
+import argparse
 
 AK, SK, AMI, KP, REGION = common.config()
 cli, ec2 = common.boto_connector('ec2')
 
-def create_vpc():
+def create_vpc(cidr_vpc='192.168.0.0/24', cidr_subnet=['192.168.0.0/25','192.168.0.128/25'], vpc_name="foobar"):
     """
         Function which will create a vpc with:
           - 2 subnets (192.168.0.0/25 and 192.168.0.128/25)
@@ -18,9 +19,7 @@ def create_vpc():
             create_vpc()
 
     """
-    cidr_vpc = '192.168.0.0/24'
-    cidr_subnet = ['192.168.0.0/25','192.168.0.128/25']
-    vpc_tags = {'Key':'Name','Value':'foobar'}
+    vpc_tags = {'Key':'Name','Value':vpc_name}
     vpc = ec2.create_vpc(CidrBlock=cidr_vpc)
     vpc.create_tags(Tags=[vpc_tags])
     for i in cidr_subnet:
@@ -40,4 +39,11 @@ def create_vpc():
     cli.associate_address(InstanceId=bastion[0].id, AllocationId=bastion_ip['AllocationId'])
 
 if __name__ == "__main__":
-    create_vpc()
+    parser = argparse.ArgumentParser(description='Create VPC')
+    parser.add_argument('--vpc-name', dest='vpcname', help='Name of your vpc', default='foobar')
+    parser.add_argument('--cidr-vpc', dest='cidrvpc', help='CIDR of your vpc', default='192.168.0.0/24')
+    parser.add_argument('--cidr-subnet', nargs='+', dest='cidrsubnet', help='CIDR of your subnet in list type', default=['192.168.0.0/25','192.168.0.128/25'])
+    argVpcname = parser.parse_args().vpcname
+    argCidrvpc = parser.parse_args().cidrvpc
+    argCidrsubnet = parser.parse_args().cidrsubnet
+    create_vpc(cidr_vpc=argCidrvpc, cidr_subnet=argCidrsubnet, vpc_name=argVpcname)
