@@ -48,8 +48,23 @@ This script allow you create a vpc with a bastion for connect it from public net
 
 Bastion machine will be usefull for connect to other machine to your vpc.
 
+You can customize your vpc thank to option below :
+
+ ```bash
+usage: create_vpc.py [-h] [--vpc-name VPCNAME] [--cidr-vpc CIDRVPC]
+                     [--cidr-subnet CIDRSUBNET [CIDRSUBNET ...]]
+
+Create VPC
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --vpc-name VPCNAME    Name of your vpc
+  --cidr-vpc CIDRVPC    CIDR of your vpc
+  --cidr-subnet CIDRSUBNET [CIDRSUBNET ...]
+                        CIDR of your subnet in list type
+ ```
+
 ## Todo 
 
- * Create argument for create custom vpc.
  * Improve common.py thank to dict.
  * Make choice during creation of ebs (in create_instance.py)
