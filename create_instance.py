@@ -24,6 +24,8 @@ def create_instance(config=None, insType='t1.micro', omi=AMI, keyPair=KP,ebsSize
 	while instance.state['Name'] != 'running':
 		instance.reload()
         instance.attach_volume(VolumeId=vol.id, Device="/dev/xvdb")
+    return instance.id
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create Instance script')
@@ -40,4 +42,4 @@ if __name__ == "__main__":
     argKeypair = parser.parse_args().keypair
     argEbs = parser.parse_args().ebs
     argUserdata = parser.parse_args().userdata
-    create_instance(vmName=argVmname, config=argUserdata, insType=argInstancetype, omi=argAmi, keyPair=argKeypair, ebsSize=argEbs)
+    instanceId = create_instance(vmName=argVmname, config=argUserdata, insType=argInstancetype, omi=argAmi, keyPair=argKeypair, ebsSize=argEbs)

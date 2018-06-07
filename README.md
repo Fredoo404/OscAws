@@ -64,6 +64,14 @@ optional arguments:
                         CIDR of your subnet in list type
  ```
 
+## Test instance
+
+test_instance.py is a script for create and destroy instance quickly.
+
+```bash
+./test_instance.py INSTANCE_NAME
+```
+
 ## Todo 
 
  * Improve common.py thank to dict.
